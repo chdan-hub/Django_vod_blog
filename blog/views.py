@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404, redirect
+from django.db.models import Q
 
 from blog.forms import BlogForm
 from blog.models import Blog
@@ -12,6 +13,14 @@ from django.urls import reverse
 
 def blog_list(request):
     blogs = Blog.objects.all().order_by('-created_at')
+
+    q = request.GET.get('q')
+    if q:
+        blogs = blogs.filter(
+            Q(title__icontains=q) |
+            Q(content__icontains=q) |
+        )
+        # blogs = blogs.filter(content__icontains=q)
 
     paginator = Paginator(blogs, 10)
     page = request.GET.get('page')
@@ -50,7 +59,7 @@ def blog_update(request, pk):
     form = BlogForm(request.POST or None, instance=blog)
     if form.is_valid():
         blog = form.save()
-        return redirect(reverse('blog-detail', kwargs={'pk': blog.pk}))
+        return redirect(reverse('blog_detail', kwargs={'pk': blog.pk}))
 
     context = {
         'form': form,
