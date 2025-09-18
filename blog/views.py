@@ -1,6 +1,7 @@
 from http.client import responses
 
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from django.shortcuts import render, get_object_or_404, redirect
 
 from blog.forms import BlogForm
@@ -35,6 +36,23 @@ def blog_create(request):
 
     context = {'form': form}
     return render(request, 'blog_create.html', context)
+
+@login_required()
+def blog_update(request, pk):
+    blog = get_object_or_404(Blog, pk=pk, author=request.user)
+
+    form = BlogForm(request.POST or None, instance=blog)
+    if form.is_valid():
+        blog = form.save()
+        return redirect(reverse('blog-detail', kwargs={'pk': blog.pk}))
+
+    context = {
+        'blog': blog,
+        'form': form,
+    }
+
+    return render(request, 'blog_update.html', context)
+
 
     # visits = int(request.COOKIES.get('visits', 0)) + 1
     #
