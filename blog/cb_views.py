@@ -1,4 +1,4 @@
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from django.db.models import Q
 
 from blog.models import Blog
@@ -24,3 +24,23 @@ class BlogListView(ListView):
                 Q(content__icontains=q)
             )
         return queryset
+
+
+class BlogDetailView(DetailView):
+    model = Blog
+    template_name = 'blog_detail.html'
+
+    # def get_queryset(self):
+    #     queryset = super().get_queryset()
+    #
+    #     return queryset.filter(id__lte=50)
+    #
+    # def get_object(self, queryset=None):
+    #     object = super().get_object()
+    #     object = self.model.objects.get(pk=self.kwargs.get('pk'))
+    #     return object
+    #
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['test'] = 'CBV'
+    #     return context
