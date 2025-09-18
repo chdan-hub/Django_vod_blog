@@ -1,5 +1,6 @@
 from http.client import responses
 
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 
 from blog.forms import BlogForm
@@ -8,7 +9,7 @@ from django.urls import reverse
 
 
 def blog_list(request):
-    blogs = Blog.objects.all()
+    blogs = Blog.objects.all().order_by('-created_at')
 
     context = {
         'blogs': blogs,
@@ -22,7 +23,11 @@ def blog_detail(request, pk):
 
     return render(request, 'blog_detail.html', context)
 
+@login_required()
 def blog_create(request):
+    # if not request.user.is_authenticated:
+    #     return redirect(reverse('login'))
+
     form = BlogForm(request.POST or None)
     if form.is_valid():
         blog = form.save(commit=False)
