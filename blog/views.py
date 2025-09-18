@@ -25,15 +25,12 @@ def blog_detail(request, pk):
 
 @login_required()
 def blog_create(request):
-    # if not request.user.is_authenticated:
-    #     return redirect(reverse('login'))
-
     form = BlogForm(request.POST or None)
     if form.is_valid():
         blog = form.save(commit=False)
         blog.author = request.user
         blog.save()
-        return redirect(reverse('blog_detail', kwargs={'pk': blog.pk}))
+        return redirect(reverse('blog-detail', kwargs={'pk': blog.pk}))
 
 
     context = {'form': form}
