@@ -1,4 +1,7 @@
-from django.views.generic import ListView, DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView
 from django.db.models import Q
 
 from blog.models import Blog
@@ -44,3 +47,20 @@ class BlogDetailView(DetailView):
     #     context = super().get_context_data(**kwargs)
     #     context['test'] = 'CBV'
     #     return context
+
+
+class BlogCreateView(LoginRequiredMixin ,CreateView):
+    model = Blog
+    template_name = 'blog_create.html'
+    fields = ('title', 'content')
+    # success_url = reverse_lazy('cb_blog_detail', kwargs={'pk' : object.pk })
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.author = self.request.user
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse_lazy('blog_detail', kwargs={'pk': self.object.pk})
+

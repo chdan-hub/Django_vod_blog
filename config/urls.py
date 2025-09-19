@@ -46,8 +46,9 @@ urlpatterns = [
     path('<int:pk>/delete/', views.blog_delete, name='blog_delete'),
 
     # CBV blog
-    path('cb/', cb_views.BlogListView.as_view(), name='blog_list'),
-    path('cb/<int:pk>/', cb_views.BlogDetailView.as_view(), name='blog_detail'),
+    path('cb/', cb_views.BlogListView.as_view(), name='cb_blog_list'),
+    path('cb/<int:pk>/', cb_views.BlogDetailView.as_view(), name='cb_blog_detail'),
+    path('cb/create/', cb_views.BlogCreateView.as_view(), name='cb_log_create'),
 
     # auth
     path('accounts/', include('django.contrib.auth.urls')),
