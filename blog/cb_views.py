@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.db.models import Q
 
 from blog.models import Blog
@@ -83,6 +83,17 @@ class BlogUpdateView(LoginRequiredMixin ,UpdateView):
 
     # def get_success_url(self):
     #     return reverse_lazy('blog_detail', kwargs={'pk': self.object.pk})
+
+
+class BlogDeleteView(LoginRequiredMixin ,DeleteView):
+    model = Blog
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(author=self.request.user)
+
+    def get_success_url(self):
+        return reverse_lazy('blog_list')
 
 
 
