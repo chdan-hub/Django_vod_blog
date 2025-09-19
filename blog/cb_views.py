@@ -52,7 +52,7 @@ class BlogDetailView(DetailView):
 class BlogCreateView(LoginRequiredMixin ,CreateView):
     model = Blog
     template_name = 'blog_create.html'
-    fields = ('title', 'content')
+    fields = ('category', 'title', 'content')
     # success_url = reverse_lazy('cb_blog_detail', kwargs={'pk' : object.pk })
 
     def form_valid(self, form):
@@ -62,16 +62,18 @@ class BlogCreateView(LoginRequiredMixin ,CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return reverse_lazy('blog_detail', kwargs={'pk': self.object.pk})
+        return reverse_lazy('blog:detail', kwargs={'pk': self.object.pk})
 
 
 class BlogUpdateView(LoginRequiredMixin ,UpdateView):
     model = Blog
     template_name = 'blog_update.html'
-    fields = ('title', 'content')
+    fields = ('category', 'title', 'content')
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        if self.request.user.is_superuser:
+            return queryset
         return queryset.filter(author=self.request.user)
 
     # def get_object(self, queryset=None):
@@ -90,7 +92,11 @@ class BlogDeleteView(LoginRequiredMixin ,DeleteView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.filter(author=self.request.user)
+
+        if not self.request.user.is_superuser:
+            queryset = queryset.filter(author=self.request.user)
+        return queryset
+
 
     def get_success_url(self):
         return reverse_lazy('blog:list')

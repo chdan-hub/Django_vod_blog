@@ -13,7 +13,7 @@ class Blog(models.Model):
         ('dog', '강아지'),
     )
 
-    category = models.CharField('카테고리', max_length=10, choices=CATEGORY_CHOICES)
+    category = models.CharField('카테고리', max_length=10, choices=CATEGORY_CHOICES, default='free')
     title = models.CharField('제목', max_length=100)
     content = models.TextField('본문')
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -35,7 +35,7 @@ class Blog(models.Model):
         verbose_name = '블로그'
         verbose_name_plural = '블로그 목록'
 
-# 제목
+# 제목 Blog.objects.filter(category='').update(category='free')
 # 본문
 # 작성일자
 # 수정일자
