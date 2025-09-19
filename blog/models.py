@@ -27,6 +27,10 @@ class Blog(models.Model):
     def __str__(self):
         return f'[{self.get_category_display()}] {self.title[:10]}'
 
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('cb_blog_detail', kwargs={'pk': self.pk})
+
     class Meta:
         verbose_name = '블로그'
         verbose_name_plural = '블로그 목록'
