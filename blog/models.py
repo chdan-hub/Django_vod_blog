@@ -29,7 +29,7 @@ class Blog(models.Model):
 
     def get_absolute_url(self):
         from django.urls import reverse
-        return reverse('blog_detail', kwargs={'pk': self.pk})
+        return reverse('blog:detail', kwargs={'pk': self.pk})
 
     class Meta:
         verbose_name = '블로그'
