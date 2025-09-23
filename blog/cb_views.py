@@ -5,7 +5,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.db.models import Q
 
-from blog.forms import CommentForm
+from blog.forms import CommentForm, BlogForm
 from blog.models import Blog, Comment
 
 
@@ -87,7 +87,7 @@ class BlogDetailView(ListView):
 class BlogCreateView(LoginRequiredMixin ,CreateView):
     model = Blog
     template_name = 'blog_form.html'
-    fields = ('category', 'title', 'content')
+    form_class = BlogForm
     # success_url = reverse_lazy('cb_blog_detail', kwargs={'pk' : object.pk })
 
     def form_valid(self, form):
@@ -96,8 +96,8 @@ class BlogCreateView(LoginRequiredMixin ,CreateView):
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
 
-    def get_success_url(self):
-        return reverse_lazy('blog:detail', kwargs={'pk': self.object.pk})
+    # def get_success_url(self):
+    #     return reverse_lazy('blog:detail', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -110,7 +110,8 @@ class BlogCreateView(LoginRequiredMixin ,CreateView):
 class BlogUpdateView(LoginRequiredMixin ,UpdateView):
     model = Blog
     template_name = 'blog_form.html'
-    fields = ('category', 'title', 'content')
+    # fields = ('category', 'title', 'content')
+    form_class = BlogForm
 
     def get_queryset(self):
         queryset = super().get_queryset()
