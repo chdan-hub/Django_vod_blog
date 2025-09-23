@@ -119,6 +119,12 @@ class BlogUpdateView(LoginRequiredMixin ,UpdateView):
             return queryset
         return queryset.filter(author=self.request.user)
 
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        self.object = form.save(commit=False)
+        self.object.author = self.request.user
+        return super().form_valid(form)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
