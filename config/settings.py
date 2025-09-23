@@ -42,7 +42,8 @@ OWNER_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-    'django_extensions'
+    'django_extensions',
+    'django_summernote',
 ]
 
 # Application definition
@@ -133,6 +134,11 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = BASE_DIR / '.static_root'
 
+
+# media
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -142,3 +148,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login/'
 LOGOUT_REDIRECT_URL = '/'
+
